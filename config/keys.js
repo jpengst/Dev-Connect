@@ -1,3 +1,3 @@
 module.exports = {
-  mongoURI: "mongodb://jpengst:goalierox1!@ds251112.mlab.com:51112/devconnect"
+  mongoURI: "mongodb://jpengst:jpengst1@ds251112.mlab.com:51112/devconnect"
 }; //link to mlab database. module.exports lets us use this object available outside of this keys.js file. user/pw in link.
