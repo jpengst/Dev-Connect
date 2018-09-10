@@ -1,11 +1,16 @@
 const express = require("express"); //Express is the backend framework.
 const mongoose = require("mongoose"); //Brings in mongoose
+const bodyParser = require("body-parser");
 
 const users = require("./routes/api/users");
 const profile = require("./routes/api/profile");
 const posts = require("./routes/api/posts");
 
 const app = express(); //initialize a variable to express.
+
+// body parser middleware:
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 //DB Config
 const db = require("./config/keys").mongoURI; //database requires keys.js file, which contains our user
