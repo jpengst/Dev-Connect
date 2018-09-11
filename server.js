@@ -1,6 +1,7 @@
 const express = require("express"); //Express is the backend framework.
 const mongoose = require("mongoose"); //Brings in mongoose
 const bodyParser = require("body-parser");
+const passport = require("passport");
 
 const users = require("./routes/api/users");
 const profile = require("./routes/api/profile");
@@ -21,9 +22,13 @@ mongoose
   .then(() => console.log("MongoDB Connected")) //.then is a promise. If it connects w/out error: log connected.
   .catch(err => console.log(err)); //.catch is to catch an error. This is also a promise.
 
-app.get("/", (req, res) => res.send("Hello world")); //Simple route to get something up and running. / is the homepage. Takes in request and response parameters.
+// Passport middleware
+app.use(passport.initialize());
 
-//Use Routes
+// Passport Config
+require("./config/passport")(passport);
+
+// Use Routes
 app.use("/api/users", users);
 app.use("/api/profile", profile);
 app.use("/api/posts", posts);

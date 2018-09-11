@@ -2,6 +2,9 @@ const express = require("express");
 const router = express.Router();
 const gravatar = require("gravatar");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const keys = require("../../config/keys");
+const passport = require("passport");
 
 // Load User model
 const User = require("../../models/User");
@@ -55,8 +58,65 @@ router.post("/register", (req, res) => {
       });
     }
   });
-
   //Find email that matches request.body.email. Access it by req.body.___
 });
+
+// @route         GET api/users/login
+// @description   Login user / Returning JWT Token
+// @access        Public
+router.post("/login", (req, res) => {
+  const email = req.body.email;
+  const password = req.body.password;
+
+  // Find user by email
+  User.findOne({ email }).then(user => {
+    // Check for user
+    if (!user) {
+      return res.status(404).json({ email: "User not found" });
+    }
+
+    // Check password
+    bcrypt
+      .compare(password, user.password) // user.password is the hashed pw in db
+      .then(isMatch => {
+        if (isMatch) {
+          // User Matched:
+
+          const payload = { id: user.id, name: user.name, avatar: user.avatar }; // Create jwt payload
+
+          // Sign Token:
+          jwt.sign(
+            payload,
+            keys.secretOrKey,
+            { expiresIn: 3600 },
+            (err, token) => {
+              res.json({
+                success: true,
+                token: "Bearer " + token // Will take this and put in header as authorization. Will send to server and validate user.
+              });
+            }
+          ); // json web token: Take in payload. keys.secretOrKey is coming from keys.js (keys.js imported at top)
+        } else {
+          return res.status(400).json({ password: "Password incorrect" });
+        }
+      });
+  });
+});
+
+// @route         GET api/users/current
+// @description   Return current user
+// @access        Private
+router.get(
+  "/current",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    res.json({
+      // Return everything but the password.
+      id: req.user.id,
+      name: req.user.name,
+      email: req.user.email
+    });
+  }
+);
 
 module.exports = router;
