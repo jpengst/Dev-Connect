@@ -4,11 +4,10 @@ const Schema = mongoose.Schema;
 // Create Schema
 const ProfileSchema = new Schema({
   user: {
-    type: Schema.Types.ObjectID, // Associate user by ID
+    type: Schema.Types.ObjectId,
     ref: "users"
   },
   handle: {
-    // URL for profiles. devconnect.com/profile/handle
     type: String,
     required: true,
     max: 40
@@ -27,7 +26,7 @@ const ProfileSchema = new Schema({
     required: true
   },
   skills: {
-    type: [String], // An array of strings, separated by commas.
+    type: [String],
     required: true
   },
   bio: {
