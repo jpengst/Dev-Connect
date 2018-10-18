@@ -19,7 +19,7 @@ const User = require("../../models/User");
 router.get("/test", (req, res) => res.json({ msg: "Users Works" }));
 
 // Create route for the registration page:
-// @route         GET api/users/register
+// @route         POST api/users/register
 // @description   Register user
 // @access        Public
 // Post request: (request, response)
